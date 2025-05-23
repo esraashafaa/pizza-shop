@@ -26,7 +26,28 @@ class PizzaController extends Controller
     {
         //
     }
-
+   /**
+     * إضافة بيتزا جديدة.
+     *
+     * @group Pizzas
+     * @authenticated
+     * @bodyParam name string required اسم البيتزا. Example: Margherita
+     * @bodyParam price number required السعر. Example: 12.50
+     * @bodyParam description string وصف اختياري. Example: بيتزا نباتية
+     * @bodyParam available boolean الحالة. Example: true
+     * @bodyParam toppings array قائمة إضافات. Example: [1, 2]
+     * @bodyParam toppings.* integer رقم الإضافة. يجب أن تكون موجودة بجدول toppings
+     * @response 201 {
+     *   "status": "success",
+     *   "data": {
+     *     "id": 1,
+     *     "name": "Margherita",
+     *     "price": "12.50",
+     *     "available": true,
+     *     "toppings": [...]
+     *   }
+     * }
+     */
     /**
      * Store a newly created resource in storage.
      */
@@ -58,7 +79,25 @@ class PizzaController extends Controller
         ],201);
     }
 
-
+/**
+     * عرض تفاصيل بيتزا معينة.
+     *
+     * @group Pizzas
+     * @urlParam id int رقم البيتزا. Example: 1
+     * @response 200 {
+     *   "status": "success",
+     *   "data": {
+     *     "id": 1,
+     *     "name": "Margherita",
+     *     "price": "12.50",
+     *     "toppings": [...]
+     *   }
+     * }
+     * @response 404 {
+     *   "status": "error",
+     *   "message": "Pizza not found"
+     * }
+     */
     /**
      * Display the specified resource.
      */
@@ -87,6 +126,31 @@ class PizzaController extends Controller
     {
         //
     }
+    /**
+     * تعديل بيتزا موجودة.
+     *
+     * @group Pizzas
+     * @authenticated
+     * @urlParam id int رقم البيتزا. Example: 1
+     * @bodyParam name string اسم البيتزا. Example: Updated Pizza
+     * @bodyParam price number السعر. Example: 14.50
+     * @bodyParam available boolean الحالة. Example: false
+     * @bodyParam description string وصف. Example: وصف جديد
+     * @bodyParam toppings array قائمة إضافات. Example: [1, 3]
+     * @response 200 {
+     *   "status": "success",
+     *   "data": {
+     *     "id": 1,
+     *     "name": "Updated Pizza",
+     *     "price": "14.50",
+     *     "available": false
+     *   }
+     * }
+     * @response 404 {
+     *   "status": "error",
+     *   "message": "Pizza not found"
+     * }
+     */
 
     /**
      * Update the specified resource in storage.
@@ -127,8 +191,20 @@ class PizzaController extends Controller
         'data' => $pizza->load('toppings')
     ]);
 }
-
-
+/** 
+  * حذف بيتزا.
+* @group Pizzas
+* @authenticated
+* @urlParam id int رقم البيتزا. Example: 1
+* @response 200 {
+*   "status": "success",
+*   "message": "Pizza deleted successfully"
+* }
+* @response 404 {
+*   "status": "error",
+*   "message": "Pizza not found"
+* }
+*/
     /**
      * Remove the specified resource from storage.
      */

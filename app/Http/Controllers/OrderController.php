@@ -12,6 +12,28 @@ use Illuminate\Support\Facades\DB;
 
     class OrderController extends Controller
 {
+     /**
+     * إنشاء طلب جديد (Order).
+     *
+     * @group Orders
+     * @authenticated
+     * 
+     * @bodyParam customer_id int required رقم العميل. Example: 3
+     * @bodyParam pizzas array required قائمة البيتزات. Example: [{"pizza_id": 1, "topping_ids": [1, 2]}]
+     * @bodyParam pizzas[].pizza_id int required رقم البيتزا. Example: 1
+     * @bodyParam pizzas[].topping_ids array قائمة التوبينغز. Example: [1, 2]
+     *
+     * @response 201 {
+     *   "message": "Order created successfully.",
+     *   "order": {
+     *     "id": 1,
+     *     "customer_id": 3,
+     *     "status_id": 1,
+     *     "total_price": 28.50,
+     *     ...
+     *   }
+     * }
+     */
 
     public function store(Request $request)
     {
@@ -29,9 +51,9 @@ use Illuminate\Support\Facades\DB;
             $status = Status::where('name', 'preparing')->firstOrFail();
     
             $order = Order::create([
-                'customer_id' => $request->customer_id, // 👈 إدخال customer_id من الطلب
+                'customer_id' => $request->customer_id, 
                 'status_id' => $status->id,
-                'total_price' => 0, // سيتم تعديله لاحقًا
+                'total_price' => 0, 
             ]);
     
             $totalPrice = 0;
@@ -84,11 +106,27 @@ use Illuminate\Support\Facades\DB;
     {
         //
     }
-
+ /**
+     * عرض تفاصيل طلب معين.
+     *
+     * @group Orders
+     * @urlParam id int رقم الطلب. Example: 1
+     *
+     * @response 200 {
+     *   "order": {
+     *     "id": 1,
+     *     "customer": {...},
+     *     "pizzas": [...],
+     *     "status": {...}
+     *   }
+     * }
+     * @response 404 {
+     *   "message": "Order not found",
+     *   "error": "Model not found"
+     * }
+     */
     /**
      * Store a newly created resource in storage.
-
-
     /**
      * Display the specified resource.
      */
@@ -114,6 +152,31 @@ use Illuminate\Support\Facades\DB;
     {
         //
     }
+     /**
+     * تحديث حالة الطلب.
+     *
+     * @group Orders
+     * @authenticated
+     * 
+     * @urlParam id int رقم الطلب. Example: 1
+     * @bodyParam status_id int required رقم الحالة الجديدة. Example: 2
+     * 
+     * @response 200 {
+     *   "message": "Order status updated successfully.",
+     *   "order": {
+     *     "id": 1,
+     *     "status_id": 2,
+     *     "status": {
+     *       "id": 2,
+     *       "name": "Ready"
+     *     }
+     *   }
+     * }
+     * @response 500 {
+     *   "message": "Error updating order status.",
+     *   "error": "..."
+     * }
+     */
 
     public function updateStatus(Request $request, $id)
 {
@@ -126,7 +189,6 @@ use Illuminate\Support\Facades\DB;
 
         $order->status_id = $request->status_id;
 
-        // احفظ وأعد تحميل الطلب للتحقق
         $saved = $order->save();
 
         if (!$saved) {

@@ -7,6 +7,22 @@ use Illuminate\Http\Request;
 
 class ToppingController extends Controller
 {
+        /**
+     * عرض كل الإضافات المتاحة (Toppings).
+     *
+     * @group Toppings
+     * @response 200 {
+     *   "status": "success",
+     *   "data": [
+     *     {
+     *       "id": 1,
+     *       "name": "Olives",
+     *       "price": 1.50,
+     *       "available": true
+     *     }
+     *   ]
+     * }
+     */
     /**
      * Display a listing of the resource.
      */
@@ -27,6 +43,24 @@ class ToppingController extends Controller
         //
     }
 
+    /**
+     * إنشاء إضافة جديدة.
+     *
+     * @group Toppings
+     * @authenticated
+     * @bodyParam name string required اسم الإضافة. Example: Pepperoni
+     * @bodyParam price number required سعر الإضافة. Example: 2.00
+     * @bodyParam available boolean الحالة. Example: true
+     * @response 201 {
+     *   "status": "success",
+     *   "data": {
+     *     "id": 1,
+     *     "name": "Pepperoni",
+     *     "price": "2.00",
+     *     "available": true
+     *   }
+     * }
+     */
     /**
      * Store a newly created resource in storage.
      */
@@ -65,7 +99,29 @@ class ToppingController extends Controller
     {
         //
     }
-
+/**
+     * تعديل إضافة موجودة.
+     *
+     * @group Toppings
+     * @authenticated
+     * @urlParam id int رقم الإضافة. Example: 1
+     * @bodyParam name string اسم الإضافة. Example: Updated Topping
+     * @bodyParam price number السعر الجديد. Example: 2.50
+     * @bodyParam available boolean الحالة. Example: false
+     * @response 200 {
+     *   "status": "success",
+     *   "data": {
+     *     "id": 1,
+     *     "name": "Updated Topping",
+     *     "price": "2.50",
+     *     "available": false
+     *   }
+     * }
+     * @response 404 {
+     *   "status": "error",
+     *   "message": "Topping not found"
+     * }
+     */
     /**
      * Update the specified resource in storage.
      */
@@ -73,7 +129,21 @@ class ToppingController extends Controller
     {
         //
     }
-
+ /**
+     * حذف إضافة.
+     *
+     * @group Toppings
+     * @authenticated
+     * @urlParam id int رقم الإضافة. Example: 1
+     * @response 200 {
+     *   "status": "success",
+     *   "message": "Topping deleted successfully"
+     * }
+     * @response 404 {
+     *   "status": "error",
+     *   "message": "Topping not found"
+     * }
+     */
     /**
      * Remove the specified resource from storage.
      */
